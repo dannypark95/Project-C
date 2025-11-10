@@ -102,7 +102,7 @@ exports.chatWithAI = onCall(
 
         // Get the Gemini model (initialize at runtime)
         const genAI = getGenAI();
-        const model = genAI.getGenerativeModel({model: "gemini-1.5-flash"});
+        const model = genAI.getGenerativeModel({model: "gemini-2.5-flash"});
 
         // Create the full prompt with system instructions
         const fullPrompt = `${SYSTEM_PROMPT}\n\nUser: ${message}\n\nAura:`;
