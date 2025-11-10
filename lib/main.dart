@@ -4,6 +4,7 @@ import 'firebase_options.dart';
 import 'theme/app_theme.dart';
 import 'screens/home_screen.dart';
 
+// Main entry point
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
