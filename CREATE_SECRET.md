@@ -5,7 +5,7 @@
 1. Go to [Google Cloud Console - Secret Manager](https://console.cloud.google.com/security/secret-manager?project=project-connect-dc6ae)
 2. Click **"Create Secret"**
 3. Name: `GEMINI_API_KEY`
-4. Secret value: Your Gemini API key (from GitHub Secrets: `AIzaSyAYnf_Sb7Hsf7h8dHPOlZTyYqsuTRl6za0`)
+4. Secret value: Your Gemini API key (get it from [Google AI Studio](https://makersuite.google.com/app/apikey))
 5. Click **"Create Secret"**
 
 ## Step 2: Grant Access to Firebase Functions

@@ -12,7 +12,7 @@ Your API key is now stored securely and never committed to the repo.
 2. Go to **Settings** → **Secrets and variables** → **Actions**
 3. Click **New repository secret**
 4. Name: `GEMINI_API_KEY`
-5. Value: Your Gemini API key (the one you had: `AIzaSyAYnf_Sb7Hsf7h8dHPOlZTyYqsuTRl6za0`)
+5. Value: Your Gemini API key (get it from [Google AI Studio](https://makersuite.google.com/app/apikey))
 6. Click **Add secret**
 
 ### 2. How It Works
