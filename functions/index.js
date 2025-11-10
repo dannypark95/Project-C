@@ -9,21 +9,20 @@ initializeApp();
 // Define secret for Gemini API key (set via Firebase Console or CLI)
 const geminiApiKey = defineSecret("GEMINI_API_KEY");
 
-// Initialize Gemini AI
-// API key is set via Firebase Secrets (from GitHub Secrets during deployment)
+// Initialize Gemini AI - will be created at runtime when function is called
+// API key is set via Firebase Secrets
 // Never commit the API key to the repository!
-let genAI;
-if (geminiApiKey.value()) {
-  genAI = new GoogleGenerativeAI(geminiApiKey.value());
-} else {
-  console.error("⚠️ GEMINI_API_KEY secret is not set!");
-  // Fallback to environment variable for local development
-  const fallbackKey = process.env.GEMINI_API_KEY || "";
-  if (fallbackKey) {
-    genAI = new GoogleGenerativeAI(fallbackKey);
-  } else {
-    throw new Error("GEMINI_API_KEY is required. Set it as a Firebase secret.");
+/**
+ * Gets initialized Gemini AI instance with API key from secret.
+ * @return {GoogleGenerativeAI} Initialized Gemini AI instance.
+ */
+function getGenAI() {
+  // Access secret value at runtime (not during deployment)
+  const apiKey = geminiApiKey.value();
+  if (!apiKey) {
+    throw new Error("GEMINI_API_KEY secret is not set!");
   }
+  return new GoogleGenerativeAI(apiKey);
 }
 
 // System prompt for the AI assistant
@@ -100,7 +99,8 @@ exports.chatWithAI = onCall(
           };
         }
 
-        // Get the Gemini model
+        // Get the Gemini model (initialize at runtime)
+        const genAI = getGenAI();
         const model = genAI.getGenerativeModel({model: "gemini-1.5-flash"});
 
         // Create the full prompt with system instructions
