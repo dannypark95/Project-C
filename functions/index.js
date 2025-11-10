@@ -27,7 +27,9 @@ if (geminiApiKey.value()) {
 }
 
 // System prompt for the AI assistant
-const SYSTEM_PROMPT = `You are "Aura," a caring and empathetic AI companion. Your purpose is to provide a supportive, non-judgmental space for users to reflect and find comfort.
+const SYSTEM_PROMPT = `You are "Aura," a caring and empathetic AI companion. ` +
+    `Your purpose is to provide a supportive, non-judgmental space for ` +
+    `users to reflect and find comfort.
 
 IMPORTANT GUIDELINES:
 - You are NOT a therapist, psychiatrist, or medical professional
@@ -35,16 +37,27 @@ IMPORTANT GUIDELINES:
 - Your tone is always calm, encouraging, and gentle
 - Focus on active listening, validation, and supportive responses
 - Help users reflect on their feelings and experiences
-- Suggest general wellness practices (breathing exercises, journaling, mindfulness)
-- If a user expresses feelings of hopelessness, gently encourage them to reflect on small positive things
+- Suggest general wellness practices (breathing exercises, journaling,
+  mindfulness)
+- If a user expresses feelings of hopelessness, gently encourage them to
+  reflect on small positive things
 
 CRISIS INTERVENTION:
-If a user mentions suicide, self-harm, or severe crisis, you MUST immediately respond with:
-"I hear that you're in a lot of pain, and it's important to talk to someone who can help. Please reach out to the 988 Suicide & Crisis Lifeline (call or text 988) or contact emergency services (911). You don't have to go through this alone."
+If a user mentions suicide, self-harm, or severe crisis, you MUST
+immediately respond with:
+"I hear that you're in a lot of pain, and it's important to talk to
+someone who can help. Please reach out to the 988 Suicide & Crisis
+Lifeline (call or text 988) or contact emergency services (911). You
+don't have to go through this alone."
 
-Keep your responses concise, warm, and supportive. Always end with an open-ended question to encourage continued conversation.`;
+Keep your responses concise, warm, and supportive. Always end with an
+open-ended question to encourage continued conversation.`;
 
-// Check for crisis keywords
+/**
+ * Checks if a message contains crisis keywords.
+ * @param {string} message - The message to check.
+ * @return {boolean} True if crisis keywords are found.
+ */
 function containsCrisisKeywords(message) {
   const crisisKeywords = [
     "suicide",
@@ -68,7 +81,7 @@ exports.chatWithAI = onCall(
     },
     async (request) => {
       try {
-        const {message, userId} = request.data;
+        const {message} = request.data;
 
         // Validate input
         if (!message || typeof message !== "string") {
@@ -77,8 +90,13 @@ exports.chatWithAI = onCall(
 
         // Check for crisis keywords first
         if (containsCrisisKeywords(message)) {
+          const crisisResponse = "I hear that you're in a lot of pain, " +
+              "and it's important to talk to someone who can help. " +
+              "Please reach out to the 988 Suicide & Crisis Lifeline " +
+              "(call or text 988) or contact emergency services (911). " +
+              "You don't have to go through this alone.";
           return {
-            response: "I hear that you're in a lot of pain, and it's important to talk to someone who can help. Please reach out to the 988 Suicide & Crisis Lifeline (call or text 988) or contact emergency services (911). You don't have to go through this alone.",
+            response: crisisResponse,
           };
         }
 
@@ -99,7 +117,8 @@ exports.chatWithAI = onCall(
       } catch (error) {
         console.error("Error in chatWithAI:", error);
         return {
-          error: "An error occurred while processing your message. Please try again.",
+          error: "An error occurred while processing your message. " +
+              "Please try again.",
         };
       }
     }
