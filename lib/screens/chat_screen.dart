@@ -26,18 +26,39 @@ class _ChatScreenState extends State<ChatScreen> {
   }
 
   Future<void> _initializeAuth() async {
-    final user = await _authService.signInAnonymously();
-    if (user != null) {
-      setState(() {
-        _userId = user.uid;
-      });
+    print('Initializing auth...');
+    try {
+      final user = await _authService.signInAnonymously();
+      if (user != null) {
+        print('Auth successful, user ID: ${user.uid}');
+        setState(() {
+          _userId = user.uid;
+        });
+      } else {
+        print('Auth failed: user is null');
+      }
+    } catch (e) {
+      print('Auth error: $e');
     }
   }
 
   Future<void> _sendMessage() async {
-    if (_messageController.text.trim().isEmpty || _userId == null) return;
+    print('_sendMessage called');
+    print('Message text: ${_messageController.text}');
+    print('User ID: $_userId');
+    
+    if (_messageController.text.trim().isEmpty) {
+      print('Message is empty, returning');
+      return;
+    }
+    
+    if (_userId == null) {
+      print('User ID is null, returning');
+      return;
+    }
 
     final message = _messageController.text.trim();
+    print('Sending message: $message');
     _messageController.clear();
 
     // Save user message immediately to Firestore
@@ -228,7 +249,14 @@ class _ChatScreenState extends State<ChatScreen> {
                     ),
                     const SizedBox(width: 8),
                     IconButton(
-                      onPressed: _isLoading ? null : _sendMessage,
+                      onPressed: _isLoading 
+                        ? () {
+                            print('Send button pressed but isLoading is true');
+                          }
+                        : () {
+                            print('Send button pressed, calling _sendMessage');
+                            _sendMessage();
+                          },
                       icon: const Icon(Icons.send),
                       style: IconButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
