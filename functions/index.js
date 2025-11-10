@@ -74,6 +74,7 @@ function containsCrisisKeywords(message) {
 // Cloud Function to handle chat with AI
 exports.chatWithAI = onCall(
     {
+      region: "us-central1",
       cors: true,
       maxInstances: 10,
       secrets: [geminiApiKey], // Use the secret
