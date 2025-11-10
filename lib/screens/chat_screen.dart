@@ -40,18 +40,41 @@ class _ChatScreenState extends State<ChatScreen> {
     final message = _messageController.text.trim();
     _messageController.clear();
 
+    // Save user message immediately to Firestore
+    try {
+      await _chatService.saveMessage(_userId!, message, true);
+    } catch (e) {
+      print('Error saving user message: $e');
+    }
+
     setState(() {
       _isLoading = true;
     });
 
     try {
-      await _chatService.sendMessage(_userId!, message);
+      final response = await _chatService.sendMessage(_userId!, message);
+      print('Received response: $response');
+      // Response is already saved in sendMessage, but if it failed, show error
+      if (response.startsWith('Error:')) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(response),
+              duration: const Duration(seconds: 5),
+            ),
+          );
+        }
+      }
       // Scroll to bottom after sending
       _scrollToBottom();
     } catch (e) {
+      print('Error in _sendMessage: $e');
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: $e')),
+          SnackBar(
+            content: Text('Error: $e'),
+            duration: const Duration(seconds: 5),
+          ),
         );
       }
     } finally {

@@ -31,11 +31,8 @@ class ChatService {
       final aiResponse = result.data['response'] as String? ?? 
                          'I apologize, but I encountered an error. Please try again.';
 
-      // Save user message to Firestore
-      await _saveMessage(userId, userMessage, true);
-
-      // Save AI response to Firestore
-      await _saveMessage(userId, aiResponse, false);
+      // Save AI response to Firestore (user message is already saved in chat_screen)
+      await saveMessage(userId, aiResponse, false);
 
       return aiResponse;
     } catch (e) {
@@ -65,7 +62,7 @@ class ChatService {
   }
 
   // Save message to Firestore
-  Future<void> _saveMessage(String userId, String content, bool isFromUser) async {
+  Future<void> saveMessage(String userId, String content, bool isFromUser) async {
     try {
       await _firestore
           .collection('users')
