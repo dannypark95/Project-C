@@ -4,6 +4,13 @@ on:
   push:
     branches:
       - main  # Only deploy when pushing to main branch
+    paths:
+      - 'lib/**'           # Flutter app code
+      - 'web/**'            # Web config
+      - 'pubspec.yaml'      # Dependencies
+      - 'pubspec.lock'      # Dependencies lock
+      - 'assets/**'         # Assets
+      - '.github/workflows/deploy.yml'  # This workflow file
   workflow_dispatch:  # Allow manual trigger from GitHub Actions tab
 
 jobs:

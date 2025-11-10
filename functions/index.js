@@ -1,21 +1,30 @@
 const {onCall} = require("firebase-functions/v2/https");
+const {defineSecret} = require("firebase-functions/params");
 const {initializeApp} = require("firebase-admin/app");
 const {GoogleGenerativeAI} = require("@google/generative-ai");
 
 // Initialize Firebase Admin
 initializeApp();
 
+// Define secret for Gemini API key (set via Firebase Console or CLI)
+const geminiApiKey = defineSecret("GEMINI_API_KEY");
+
 // Initialize Gemini AI
-// API key is set via environment variable (from GitHub Secrets during deployment)
+// API key is set via Firebase Secrets (from GitHub Secrets during deployment)
 // Never commit the API key to the repository!
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || "";
-
-if (!GEMINI_API_KEY) {
-  console.error("⚠️ GEMINI_API_KEY environment variable is not set!");
-  throw new Error("GEMINI_API_KEY is required. Set it as an environment variable.");
+let genAI;
+if (geminiApiKey.value()) {
+  genAI = new GoogleGenerativeAI(geminiApiKey.value());
+} else {
+  console.error("⚠️ GEMINI_API_KEY secret is not set!");
+  // Fallback to environment variable for local development
+  const fallbackKey = process.env.GEMINI_API_KEY || "";
+  if (fallbackKey) {
+    genAI = new GoogleGenerativeAI(fallbackKey);
+  } else {
+    throw new Error("GEMINI_API_KEY is required. Set it as a Firebase secret.");
+  }
 }
-
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 // System prompt for the AI assistant
 const SYSTEM_PROMPT = `You are "Aura," a caring and empathetic AI companion. Your purpose is to provide a supportive, non-judgmental space for users to reflect and find comfort.
@@ -55,6 +64,7 @@ exports.chatWithAI = onCall(
     {
       cors: true,
       maxInstances: 10,
+      secrets: [geminiApiKey], // Use the secret
     },
     async (request) => {
       try {
