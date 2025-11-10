@@ -121,6 +121,6 @@ exports.chatWithAI = onCall(
               "Please try again.",
         };
       }
-    }
+    },
 );
 
