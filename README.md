@@ -139,9 +139,49 @@ lib/
   └── models/                # Data models (for future use)
 ```
 
-## Next Steps
+## Firebase Setup
 
-- [ ] Add Firebase integration
-- [ ] Implement authentication
-- [ ] Add AI chat functionality
-- [ ] Create journal/mood tracking features
+### 1. Get Firebase Web Config
+
+1. Go to [Firebase Console](https://console.firebase.google.com/)
+2. Select your project: **project-connect-dc6ae**
+3. Click gear icon ⚙️ → **Project settings**
+4. Scroll to **Your apps** → Click **Add app** → Select **Web** (</>)
+5. Copy the config values
+6. Update `lib/firebase_options.dart` with your config
+
+### 2. Enable Services
+
+- **Anonymous Authentication:** Firebase Console → Authentication → Sign-in method → Enable **Anonymous**
+- **Firestore Database:** Firebase Console → Firestore Database → Create database → Start in test mode
+
+### 3. Create Gemini API Secret (One-Time)
+
+1. Go to [Google Cloud Secret Manager](https://console.cloud.google.com/security/secret-manager?project=project-connect-dc6ae)
+2. Click **Create Secret**
+3. Name: `GEMINI_API_KEY`
+4. Value: Your Gemini API key ([Get it here](https://makersuite.google.com/app/apikey))
+5. Click **Create Secret**
+
+### 4. Deploy
+
+After setup, push to GitHub and both frontend and backend will deploy automatically.
+
+## Project Structure
+
+```
+lib/
+  ├── main.dart              # App entry point
+  ├── screens/
+  │   ├── home_screen.dart   # Home screen
+  │   └── chat_screen.dart   # AI chat interface
+  ├── services/
+  │   ├── auth_service.dart  # Anonymous authentication
+  │   └── chat_service.dart  # Chat with AI
+  ├── theme/
+  │   └── app_theme.dart     # App theme
+  └── models/                # Data models
+
+functions/
+  └── index.js               # Firebase Functions (Gemini API)
+```
