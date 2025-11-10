@@ -117,9 +117,11 @@ exports.chatWithAI = onCall(
         };
       } catch (error) {
         console.error("Error in chatWithAI:", error);
+        console.error("Error stack:", error.stack);
+        // Return more detailed error for debugging
+        const errorMessage = error.message || error.toString();
         return {
-          error: "An error occurred while processing your message. " +
-              "Please try again.",
+          error: `An error occurred: ${errorMessage}. Please check the function logs.`,
         };
       }
     },

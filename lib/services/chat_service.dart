@@ -28,8 +28,18 @@ class ChatService {
         },
       );
 
-      final aiResponse = result.data['response'] as String? ?? 
-                         'I apologize, but I encountered an error. Please try again.';
+      // Check if function returned an error
+      if (result.data['error'] != null) {
+        final errorMsg = result.data['error'] as String;
+        print('Function returned error: $errorMsg');
+        return 'Error: $errorMsg';
+      }
+
+      final aiResponse = result.data['response'] as String?;
+      if (aiResponse == null || aiResponse.isEmpty) {
+        print('No response from function. Result data: ${result.data}');
+        return 'I apologize, but I encountered an error. Please try again.';
+      }
 
       // Save AI response to Firestore (user message is already saved in chat_screen)
       await saveMessage(userId, aiResponse, false);
