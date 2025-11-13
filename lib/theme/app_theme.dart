@@ -38,7 +38,6 @@ class AppTheme {
           color: textPrimary,
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          fontFamily: 'Inter',
         ),
       ),
       textTheme: const TextTheme(
@@ -46,43 +45,36 @@ class AppTheme {
           color: textPrimary,
           fontSize: 32,
           fontWeight: FontWeight.bold,
-          fontFamily: 'Inter',
         ),
         displayMedium: TextStyle(
           color: textPrimary,
           fontSize: 28,
           fontWeight: FontWeight.bold,
-          fontFamily: 'Inter',
         ),
         displaySmall: TextStyle(
           color: textPrimary,
           fontSize: 24,
           fontWeight: FontWeight.w600,
-          fontFamily: 'Inter',
         ),
         headlineMedium: TextStyle(
           color: textPrimary,
           fontSize: 20,
           fontWeight: FontWeight.w600,
-          fontFamily: 'Inter',
         ),
         titleLarge: TextStyle(
           color: textPrimary,
           fontSize: 18,
           fontWeight: FontWeight.w600,
-          fontFamily: 'Inter',
         ),
         bodyLarge: TextStyle(
           color: textPrimary,
           fontSize: 16,
           fontWeight: FontWeight.normal,
-          fontFamily: 'Inter',
         ),
         bodyMedium: TextStyle(
           color: textSecondary,
           fontSize: 14,
           fontWeight: FontWeight.normal,
-          fontFamily: 'Inter',
         ),
       ),
       cardTheme: CardThemeData(
@@ -104,7 +96,6 @@ class AppTheme {
           textStyle: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
-            fontFamily: 'Inter',
           ),
         ),
       ),
