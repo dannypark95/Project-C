@@ -120,19 +120,22 @@ exports.chatWithAI = onCall(
           });
         }
 
-        // Add location-based greeting if first message
-        let locationGreeting = "";
-        if ((!conversationHistory || conversationHistory.length === 0) &&
-            userLocation) {
-          if (userLocation.toLowerCase().includes("korea") ||
-              userLocation.toLowerCase().includes("seoul")) {
-            locationGreeting = "\n\nNote: The user is in Korea. You can respond " +
-                "in Korean if appropriate, or mix Korean and English naturally.";
-          }
+        // Detect if message is in Korean
+        const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(message);
+        
+        // Add location/language-based instructions
+        let languageInstruction = "";
+        if (isKorean || (userLocation && 
+            (userLocation.toLowerCase().includes("korea") ||
+             userLocation.toLowerCase().includes("seoul")))) {
+          languageInstruction = "\n\nIMPORTANT: The user is communicating in Korean " +
+              "or is in Korea. You MUST respond in Korean. Mix Korean and English " +
+              "naturally if needed, but primarily use Korean. Always greet in Korean " +
+              "if the user greets in Korean.";
         }
 
         // Create the full prompt with system instructions and context
-        const fullPrompt = `${SYSTEM_PROMPT}${locationGreeting}${conversationContext}\n\nUser: ${message}\n\nAura:`;
+        const fullPrompt = `${SYSTEM_PROMPT}${languageInstruction}${conversationContext}\n\nUser: ${message}\n\nAura:`;
 
         // Generate response
         const result = await model.generateContent(fullPrompt);
