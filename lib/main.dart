@@ -6,6 +6,7 @@ import 'screens/home_screen.dart';
 
 // Main entry point
 void main() async {
+  // Force rebuild to clear cache
   WidgetsFlutterBinding.ensureInitialized();
   
   // Initialize Firebase
