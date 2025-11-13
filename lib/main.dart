@@ -19,17 +19,44 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  // Initialize locale based on browser/system language
+  Locale _locale = _getInitialLocale();
+
+  static Locale _getInitialLocale() {
+    // Try to get system locale, default to English
+    final systemLocale = WidgetsBinding.instance.platformDispatcher.locale;
+    if (systemLocale.languageCode == 'ko') {
+      return const Locale('ko');
+    }
+    return const Locale('en');
+  }
+
+  void setLocale(Locale locale) {
+    setState(() {
+      _locale = locale;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'CONNECTED - Mental Wellness App',
       theme: AppTheme.lightTheme,
-      home: const HomeScreen(),
+      home: HomeScreen(
+        onLocaleChanged: setLocale,
+        currentLocale: _locale,
+      ),
       debugShowCheckedModeBanner: false,
       // Localization configuration
+      locale: _locale,
       localizationsDelegates: const [
         AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
