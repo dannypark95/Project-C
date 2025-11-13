@@ -94,8 +94,8 @@ class _ChatScreenState extends State<ChatScreen> {
     // Determine welcome message based on location
     final isKorean = _userLocation?.toLowerCase().contains('korea') ?? false;
     final welcomePrompt = isKorean 
-        ? '안녕하세요! 저는 Aura입니다. 오늘 어떻게 도와드릴까요?'
-        : 'Hello! I\'m Aura. How can I help you today?';
+        ? '안녕하세요! 저는 Aura입니다. 🌟\n\n저는 여러분의 감정과 경험을 듣고, 편안하고 비판적이지 않은 공간을 제공하기 위해 여기 있습니다. 오늘 하루 어떠셨나요? 어떤 이야기든 편하게 나눠주세요. 여러분의 감정을 존중하고, 함께 생각해보는 시간을 가져요.\n\n무엇이든 편하게 말씀해주세요. 저는 여기서 듣고 있어요.'
+        : 'Hello! I\'m Aura. 🌟\n\nI\'m here to listen to your feelings and experiences, and to provide a safe, non-judgmental space for you to reflect and find comfort. How are you feeling today? Feel free to share whatever is on your mind.\n\nI\'m here to listen, validate your experiences, and support you through whatever you\'re going through. What would you like to talk about?';
     
     // Save welcome message to Firestore
     try {
