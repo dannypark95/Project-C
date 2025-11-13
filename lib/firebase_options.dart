@@ -28,12 +28,12 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'YOUR_API_KEY',
-    appId: 'YOUR_APP_ID',
-    messagingSenderId: 'YOUR_MESSAGING_SENDER_ID',
-    projectId: 'project-connect-dc6ae',
-    authDomain: 'project-connect-dc6ae.firebaseapp.com',
-    storageBucket: 'project-connect-dc6ae.appspot.com',
+    apiKey: "AIzaSyAX8jtBzpxGXY3ZVRo8_PGB8YhzTCIQGwY",
+    authDomain: "project-connect-dc6ae.firebaseapp.com",
+    projectId: "project-connect-dc6ae",
+    storageBucket: "project-connect-dc6ae.firebasestorage.app",
+    messagingSenderId: "1031987338127",
+    appId: "1:1031987338127:web:e8d15041c4b6f0a77389fa",
+    measurementId: "G-Y3NW5NFRX2",
   );
 }
-
