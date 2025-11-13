@@ -120,18 +120,19 @@ exports.chatWithAI = onCall(
           });
         }
 
-        // Detect if message is in Korean
-        const isKorean = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힣]/.test(message);
-        
-        // Add location/language-based instructions
+        // Add language matching instruction - AI will automatically detect and match
         let languageInstruction = "";
-        if (isKorean || (userLocation && 
+        if (userLocation && 
             (userLocation.toLowerCase().includes("korea") ||
-             userLocation.toLowerCase().includes("seoul")))) {
-          languageInstruction = "\n\nIMPORTANT: The user is communicating in Korean " +
-              "or is in Korea. You MUST respond in Korean. Mix Korean and English " +
-              "naturally if needed, but primarily use Korean. Always greet in Korean " +
-              "if the user greets in Korean.";
+             userLocation.toLowerCase().includes("seoul"))) {
+          languageInstruction = "\n\nIMPORTANT: The user is in Korea. Match the language " +
+              "of their message - if they write in Korean, respond in Korean. If they mix " +
+              "Korean and English, you can mix as well. Always match their language preference.";
+        } else {
+          languageInstruction = "\n\nIMPORTANT: Match the language of the user's message. " +
+              "If they write in Korean, respond in Korean. If they write in English, respond " +
+              "in English. If they mix languages, you can mix as well. Always match their " +
+              "language preference naturally.";
         }
 
         // Create the full prompt with system instructions and context
