@@ -28,15 +28,16 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   // Initialize locale based on browser/system language
-  Locale _locale = _getInitialLocale();
+  late Locale _locale;
 
-  static Locale _getInitialLocale() {
-    // Try to get system locale, default to English
+  @override
+  void initState() {
+    super.initState();
+    // Get system locale, default to English
     final systemLocale = WidgetsBinding.instance.platformDispatcher.locale;
-    if (systemLocale.languageCode == 'ko') {
-      return const Locale('ko');
-    }
-    return const Locale('en');
+    _locale = systemLocale.languageCode == 'ko' 
+        ? const Locale('ko') 
+        : const Locale('en');
   }
 
   void setLocale(Locale locale) {
