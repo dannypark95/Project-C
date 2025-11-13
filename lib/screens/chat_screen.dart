@@ -59,6 +59,8 @@ class _ChatScreenState extends State<ChatScreen> {
             _userLocation = 'Unknown';
           }
         });
+        // Send welcome message after location is detected
+        _sendWelcomeMessage();
       }
     } catch (e) {
       print('Error detecting location: $e');
@@ -66,7 +68,41 @@ class _ChatScreenState extends State<ChatScreen> {
         setState(() {
           _userLocation = 'Unknown';
         });
+        _sendWelcomeMessage();
       }
+    }
+  }
+
+  Future<void> _sendWelcomeMessage() async {
+    if (_userId == null) return;
+    
+    // Check if there are existing messages
+    try {
+      final messagesSnapshot = await _chatService.getChatHistory(_userId!)
+          .first
+          .timeout(const Duration(seconds: 2));
+      
+      // If there are already messages, don't send welcome
+      if (messagesSnapshot.isNotEmpty) {
+        return;
+      }
+    } catch (e) {
+      print('Error checking message history: $e');
+      // Continue to send welcome message if check fails
+    }
+    
+    // Determine welcome message based on location
+    final isKorean = _userLocation?.toLowerCase().contains('korea') ?? false;
+    final welcomePrompt = isKorean 
+        ? '안녕하세요! 저는 Aura입니다. 오늘 어떻게 도와드릴까요?'
+        : 'Hello! I\'m Aura. How can I help you today?';
+    
+    // Save welcome message to Firestore
+    try {
+      await _chatService.saveMessage(_userId!, welcomePrompt, false);
+      print('Welcome message sent: $welcomePrompt');
+    } catch (e) {
+      print('Error sending welcome message: $e');
     }
   }
 
