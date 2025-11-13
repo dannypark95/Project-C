@@ -18,6 +18,8 @@ class _ChatScreenState extends State<ChatScreen> {
   
   bool _isLoading = false;
   String? _userId;
+  String? _userLocation;
+  List<MessageModel> _messages = [];
 
   @override
   void initState() {
@@ -34,11 +36,37 @@ class _ChatScreenState extends State<ChatScreen> {
         setState(() {
           _userId = user.uid;
         });
+        _detectLocation();
       } else {
         print('Auth failed: user is null');
       }
     } catch (e) {
       print('Auth error: $e');
+    }
+  }
+
+  Future<void> _detectLocation() async {
+    try {
+      // Try to detect location from browser language
+      // For now, we'll use a simple approach - you can enhance this later
+      // with actual geolocation API or IP-based detection
+      if (mounted) {
+        final language = Localizations.localeOf(context).languageCode;
+        setState(() {
+          if (language == 'ko') {
+            _userLocation = 'Korea';
+          } else {
+            _userLocation = 'Unknown';
+          }
+        });
+      }
+    } catch (e) {
+      print('Error detecting location: $e');
+      if (mounted) {
+        setState(() {
+          _userLocation = 'Unknown';
+        });
+      }
     }
   }
 
@@ -73,7 +101,15 @@ class _ChatScreenState extends State<ChatScreen> {
     });
 
     try {
-      final response = await _chatService.sendMessage(_userId!, message);
+      // Get current messages for conversation history
+      final currentMessages = List<MessageModel>.from(_messages);
+      
+      final response = await _chatService.sendMessage(
+        _userId!,
+        message,
+        conversationHistory: currentMessages,
+        userLocation: _userLocation,
+      );
       print('Received response: $response');
       // Response is already saved in sendMessage, but if it failed, show error
       if (response.startsWith('Error:')) {
@@ -172,6 +208,14 @@ class _ChatScreenState extends State<ChatScreen> {
                   }
 
                   final messages = snapshot.data!;
+                  // Update local messages list for conversation history
+                  _messages = messages;
+                  
+                  // Scroll to bottom when messages load
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    _scrollToBottom();
+                  });
+                  
                   return ListView.builder(
                     controller: _scrollController,
                     padding: const EdgeInsets.all(16),

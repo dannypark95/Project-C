@@ -10,15 +10,35 @@ class ChatService {
   );
 
   // Send message to AI and save to history
-  Future<String> sendMessage(String userId, String userMessage) async {
+  Future<String> sendMessage(
+    String userId,
+    String userMessage, {
+    List<MessageModel>? conversationHistory,
+    String? userLocation,
+  }) async {
     try {
       // Call Firebase Function to get AI response
       final callable = _functions.httpsCallable('chatWithAI');
+      
+      // Prepare conversation history for the function
+      List<Map<String, dynamic>>? historyData;
+      if (conversationHistory != null && conversationHistory.isNotEmpty) {
+        // Get last 10 messages for context (to avoid token limits)
+        final recentHistory = conversationHistory.length > 10
+            ? conversationHistory.sublist(conversationHistory.length - 10)
+            : conversationHistory;
+        historyData = recentHistory.map((msg) => {
+          'content': msg.content,
+          'isFromUser': msg.isFromUser,
+        }).toList();
+      }
       
       // Add timeout to prevent infinite spinning
       final result = await callable.call({
         'message': userMessage,
         'userId': userId,
+        'conversationHistory': historyData,
+        'userLocation': userLocation,
       }).timeout(
         const Duration(seconds: 30),
         onTimeout: () {

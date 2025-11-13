@@ -38,6 +38,11 @@ IMPORTANT GUIDELINES:
 - Help users reflect on their feelings and experiences
 - Suggest general wellness practices (breathing exercises, journaling,
   mindfulness)
+- You CAN provide Bible verses, religious texts, or spiritual guidance when
+  requested - this is supportive content, not medical advice
+- You CAN provide summaries of conversations when asked
+- Remember previous messages in the conversation to provide context-aware
+  responses
 - If a user expresses feelings of hopelessness, gently encourage them to
   reflect on small positive things
 
@@ -81,7 +86,7 @@ exports.chatWithAI = onCall(
     },
     async (request) => {
       try {
-        const {message} = request.data;
+        const {message, conversationHistory, userLocation} = request.data;
 
         // Validate input
         if (!message || typeof message !== "string") {
@@ -104,8 +109,30 @@ exports.chatWithAI = onCall(
         const genAI = getGenAI();
         const model = genAI.getGenerativeModel({model: "gemini-2.5-flash"});
 
-        // Create the full prompt with system instructions
-        const fullPrompt = `${SYSTEM_PROMPT}\n\nUser: ${message}\n\nAura:`;
+        // Build conversation context
+        let conversationContext = "";
+        if (conversationHistory && Array.isArray(conversationHistory) &&
+            conversationHistory.length > 0) {
+          conversationContext = "\n\nPrevious conversation:\n";
+          conversationHistory.forEach((msg) => {
+            const role = msg.isFromUser ? "User" : "Aura";
+            conversationContext += `${role}: ${msg.content}\n`;
+          });
+        }
+
+        // Add location-based greeting if first message
+        let locationGreeting = "";
+        if ((!conversationHistory || conversationHistory.length === 0) &&
+            userLocation) {
+          if (userLocation.toLowerCase().includes("korea") ||
+              userLocation.toLowerCase().includes("seoul")) {
+            locationGreeting = "\n\nNote: The user is in Korea. You can respond " +
+                "in Korean if appropriate, or mix Korean and English naturally.";
+          }
+        }
+
+        // Create the full prompt with system instructions and context
+        const fullPrompt = `${SYSTEM_PROMPT}${locationGreeting}${conversationContext}\n\nUser: ${message}\n\nAura:`;
 
         // Generate response
         const result = await model.generateContent(fullPrompt);
