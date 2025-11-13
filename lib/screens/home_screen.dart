@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../l10n/app_localizations.dart';
 import 'chat_screen.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -24,16 +25,16 @@ class HomeScreen extends StatelessWidget {
                     height: 96,
                   ),
                   const SizedBox(height: 24),
-                  const Text(
-                    'CONNECTED',
-                    style: TextStyle(
+                  Text(
+                    AppLocalizations.of(context)!.appTitle,
+                    style: const TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Your mental wellness companion',
+                    AppLocalizations.of(context)!.appSubtitle,
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   const SizedBox(height: 48),
@@ -52,7 +53,7 @@ class HomeScreen extends StatelessWidget {
                         vertical: 16,
                       ),
                     ),
-                    child: const Text('Start Chat'),
+                    child: Text(AppLocalizations.of(context)!.startChat),
                   ),
                 ],
               ),

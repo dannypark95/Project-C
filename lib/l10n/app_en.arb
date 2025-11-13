@@ -1,0 +1,37 @@
+{
+  "@@locale": "en",
+  "appTitle": "CONNECTED",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  "appSubtitle": "Your mental wellness companion",
+  "@appSubtitle": {
+    "description": "The subtitle on the home screen"
+  },
+  "startChat": "Start Chat",
+  "@startChat": {
+    "description": "Button text to start chatting"
+  },
+  "startConversation": "Start a conversation",
+  "@startConversation": {
+    "description": "Empty state message when no messages exist"
+  },
+  "typeMessage": "Type a message...",
+  "@typeMessage": {
+    "description": "Placeholder text in message input field"
+  },
+  "error": "Error: {error}",
+  "@error": {
+    "description": "Error message format",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeMessage": "Hello! I'm Aura. 🌟\n\nI'm here to listen to your feelings and experiences, and to provide a safe, non-judgmental space for you to reflect and find comfort. How are you feeling today? Feel free to share whatever is on your mind.\n\nI'm here to listen, validate your experiences, and support you through whatever you're going through. What would you like to talk about?",
+  "@welcomeMessage": {
+    "description": "Welcome message shown when user first opens chat"
+  }
+}
+
