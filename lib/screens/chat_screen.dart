@@ -5,7 +5,14 @@ import '../services/auth_service.dart';
 import '../models/message_model.dart';
 
 class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+  final Function(ThemeMode) onThemeChanged;
+  final ThemeMode currentThemeMode;
+
+  const ChatScreen({
+    super.key,
+    required this.onThemeChanged,
+    required this.currentThemeMode,
+  });
 
   @override
   State<ChatScreen> createState() => _ChatScreenState();
@@ -207,6 +214,28 @@ class _ChatScreenState extends State<ChatScreen> {
     }
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.appTitle),
+        actions: [
+          IconButton(
+            icon: Icon(
+              widget.currentThemeMode == ThemeMode.dark
+                  ? Icons.light_mode
+                  : Icons.dark_mode,
+            ),
+            tooltip: widget.currentThemeMode == ThemeMode.dark
+                ? 'Switch to light mode'
+                : 'Switch to dark mode',
+            onPressed: () {
+              widget.onThemeChanged(
+                widget.currentThemeMode == ThemeMode.dark
+                    ? ThemeMode.light
+                    : ThemeMode.dark,
+              );
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: Column(
           children: [
@@ -261,15 +290,18 @@ class _ChatScreenState extends State<ChatScreen> {
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: Row(
                             children: [
-                              const CircleAvatar(
-                                backgroundColor: Colors.grey,
-                                child: Icon(Icons.smart_toy, color: Colors.white),
+                              CircleAvatar(
+                                backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                                child: Icon(
+                                  Icons.smart_toy,
+                                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                                ),
                               ),
                               const SizedBox(width: 12),
                               Container(
                                 padding: const EdgeInsets.all(12),
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[200],
+                                  color: Theme.of(context).colorScheme.surfaceVariant,
                                   borderRadius: BorderRadius.circular(16),
                                 ),
                                 child: const SizedBox(
@@ -298,7 +330,9 @@ class _ChatScreenState extends State<ChatScreen> {
                 color: Theme.of(context).scaffoldBackgroundColor,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? Colors.black.withOpacity(0.3)
+                        : Colors.black.withOpacity(0.05),
                     blurRadius: 10,
                     offset: const Offset(0, -2),
                   ),
@@ -338,7 +372,7 @@ class _ChatScreenState extends State<ChatScreen> {
                       icon: const Icon(Icons.send),
                       style: IconButton.styleFrom(
                         backgroundColor: Theme.of(context).colorScheme.primary,
-                        foregroundColor: Colors.white,
+                        foregroundColor: Theme.of(context).colorScheme.onPrimary,
                         padding: const EdgeInsets.all(12),
                       ),
                     ),
@@ -362,9 +396,13 @@ class _ChatScreenState extends State<ChatScreen> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (!isUser) ...[
-            const CircleAvatar(
-              backgroundColor: Colors.grey,
-              child: Icon(Icons.smart_toy, color: Colors.white, size: 20),
+            CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+              child: Icon(
+                Icons.smart_toy,
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+                size: 20,
+              ),
             ),
             const SizedBox(width: 12),
           ],
@@ -374,13 +412,15 @@ class _ChatScreenState extends State<ChatScreen> {
               decoration: BoxDecoration(
                 color: isUser
                     ? Theme.of(context).colorScheme.primary
-                    : Colors.grey[200],
+                    : Theme.of(context).colorScheme.surfaceVariant,
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Text(
                 message.content,
                 style: TextStyle(
-                  color: isUser ? Colors.white : Colors.black87,
+                  color: isUser
+                      ? Theme.of(context).colorScheme.onPrimary
+                      : Theme.of(context).colorScheme.onSurfaceVariant,
                   fontSize: 15,
                 ),
               ),
@@ -388,9 +428,13 @@ class _ChatScreenState extends State<ChatScreen> {
           ),
           if (isUser) ...[
             const SizedBox(width: 12),
-            const CircleAvatar(
-              backgroundColor: Colors.blue,
-              child: Icon(Icons.person, color: Colors.white, size: 20),
+            CircleAvatar(
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: Icon(
+                Icons.person,
+                color: Theme.of(context).colorScheme.onPrimary,
+                size: 20,
+              ),
             ),
           ],
         ],

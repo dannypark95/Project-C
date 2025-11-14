@@ -6,11 +6,15 @@ import 'chat_screen.dart';
 class HomeScreen extends StatelessWidget {
   final Function(Locale) onLocaleChanged;
   final Locale currentLocale;
+  final Function(ThemeMode) onThemeChanged;
+  final ThemeMode currentThemeMode;
 
   const HomeScreen({
     super.key,
     required this.onLocaleChanged,
     required this.currentLocale,
+    required this.onThemeChanged,
+    required this.currentThemeMode,
   });
 
   @override
@@ -26,14 +30,24 @@ class HomeScreen extends StatelessWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Language switcher button (top right)
+                  // Language and theme switcher buttons (top right)
                   Align(
                     alignment: Alignment.topRight,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 16.0),
-                      child: _LanguageButton(
-                        currentLocale: currentLocale,
-                        onLocaleChanged: onLocaleChanged,
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          _ThemeToggleButton(
+                            currentThemeMode: currentThemeMode,
+                            onThemeChanged: onThemeChanged,
+                          ),
+                          const SizedBox(width: 8),
+                          _LanguageButton(
+                            currentLocale: currentLocale,
+                            onLocaleChanged: onLocaleChanged,
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -62,7 +76,10 @@ class HomeScreen extends StatelessWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => const ChatScreen(),
+                          builder: (context) => ChatScreen(
+                            onThemeChanged: onThemeChanged,
+                            currentThemeMode: currentThemeMode,
+                          ),
                         ),
                       );
                     },
@@ -171,6 +188,37 @@ class _LanguageButton extends StatelessWidget {
       onSelected: (Locale locale) {
         onLocaleChanged(locale);
       },
+    );
+  }
+}
+
+class _ThemeToggleButton extends StatelessWidget {
+  final ThemeMode currentThemeMode;
+  final Function(ThemeMode) onThemeChanged;
+
+  const _ThemeToggleButton({
+    required this.currentThemeMode,
+    required this.onThemeChanged,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = currentThemeMode == ThemeMode.dark;
+    
+    return IconButton(
+      icon: Icon(
+        isDark ? Icons.light_mode : Icons.dark_mode,
+        size: 20,
+      ),
+      tooltip: isDark ? 'Switch to light mode' : 'Switch to dark mode',
+      onPressed: () {
+        onThemeChanged(
+          isDark ? ThemeMode.light : ThemeMode.dark,
+        );
+      },
+      style: IconButton.styleFrom(
+        foregroundColor: Theme.of(context).colorScheme.onSurface,
+      ),
     );
   }
 }
