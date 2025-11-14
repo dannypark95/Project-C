@@ -78,7 +78,6 @@ class HomeScreen extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (context) => ChatScreen(
                             onThemeChanged: onThemeChanged,
-                            currentThemeMode: currentThemeMode,
                           ),
                         ),
                       );

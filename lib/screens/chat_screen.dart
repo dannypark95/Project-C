@@ -6,12 +6,10 @@ import '../models/message_model.dart';
 
 class ChatScreen extends StatefulWidget {
   final Function(ThemeMode) onThemeChanged;
-  final ThemeMode currentThemeMode;
 
   const ChatScreen({
     super.key,
     required this.onThemeChanged,
-    required this.currentThemeMode,
   });
 
   @override
@@ -213,24 +211,23 @@ class _ChatScreenState extends State<ChatScreen> {
       );
     }
 
+    // Get current theme brightness from context (this updates automatically)
+    final isDarkMode = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(AppLocalizations.of(context)!.appTitle),
         actions: [
           IconButton(
             icon: Icon(
-              widget.currentThemeMode == ThemeMode.dark
-                  ? Icons.light_mode
-                  : Icons.dark_mode,
+              isDarkMode ? Icons.light_mode : Icons.dark_mode,
             ),
-            tooltip: widget.currentThemeMode == ThemeMode.dark
+            tooltip: isDarkMode
                 ? 'Switch to light mode'
                 : 'Switch to dark mode',
             onPressed: () {
               widget.onThemeChanged(
-                widget.currentThemeMode == ThemeMode.dark
-                    ? ThemeMode.light
-                    : ThemeMode.dark,
+                isDarkMode ? ThemeMode.light : ThemeMode.dark,
               );
             },
           ),
